@@ -2,6 +2,18 @@
 #include <iostream>
 #include <vulkan/vulkan.h>
 
+void printStats(VkPhysicalDevice &device) {
+    VkPhysicalDeviceProperties properties;
+    vkGetPhysicalDeviceProperties(device, &properties);
+
+    std::cout << "Name: " << properties.deviceName << "\n";
+    uint32_t apiVer = properties.apiVersion;
+    std::cout << "API Version: " << VK_VERSION_MAJOR(apiVer) << "." << VK_VERSION_MINOR(apiVer) << "." << VK_VERSION_PATCH(apiVer) << "\n";
+    std::cout << "Vendor ID: " << properties.vendorID << "\n";
+    std::cout << "Device ID: " << properties.deviceID << "\n";
+    std::cout << "Device Type: " << properties.deviceType << "\n";
+}
+
 int main(int argc, const char * argv[]) {
 
     // Definition of the Application, sType has to be filled in every VKObject
@@ -37,27 +49,25 @@ int main(int argc, const char * argv[]) {
 
     // Check the amount of Physical Devices
     uint32_t amountOfPhysicalDevices = 0;
-    vkEnumeratePhysicalDevices(instance, &amountOfPhysicalDevices, NULL);
+    result = vkEnumeratePhysicalDevices(instance, &amountOfPhysicalDevices, NULL);
 
-    VkPhysicalDevice *physicalDevices = new VkPhysicalDevice[amountOfPhysicalDevices];
-
-    vkEnumeratePhysicalDevices(instance, &amountOfPhysicalDevices, physicalDevices);
-
-
-    uint32_t instance_layer_count;
-
-    result = vkEnumerateInstanceLayerProperties(&instance_layer_count, nullptr);
-    std::cout << instance_layer_count << " layers found!\n";
-    if (instance_layer_count > 0) {
-        std::unique_ptr<VkLayerProperties[]> instance_layers(new VkLayerProperties[instance_layer_count]);
-        result = vkEnumerateInstanceLayerProperties(&instance_layer_count, instance_layers.get());
-        for (int i = 0; i < instance_layer_count; ++i) {
-            std::cout << instance_layers[i].layerName << "\n";
-        }
+    if (result != VK_SUCCESS) {
+        std::cout << "Can't get Number of GPUs";
     }
 
-    result = vkCreateInstance(&instanceInfo, NULL, &instance);
-    std::cout << "vkCreateInstance result: " << result  << "\n";
+    // Create some physicalDevices
+    VkPhysicalDevice *physicalDevices = new VkPhysicalDevice[amountOfPhysicalDevices];
+    result = vkEnumeratePhysicalDevices(instance, &amountOfPhysicalDevices, physicalDevices);
+
+    if (result != VK_SUCCESS) {
+        std::cout << "Error again";
+    }
+
+    std::cout << "I have " << amountOfPhysicalDevices << " GPUs\n";
+
+    for (int i = 0; i < amountOfPhysicalDevices; i++) {
+        printStats(physicalDevices[i]);
+    }
 
     vkDestroyInstance(instance, nullptr);
     return 0;
