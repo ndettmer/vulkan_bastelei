@@ -3,7 +3,7 @@ project(vulkan01)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(vulkan01 main.cpp)
+add_executable(vulkan01 main.cpp Window.cpp)
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})

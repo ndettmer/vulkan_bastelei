@@ -3,9 +3,47 @@
 #include <vulkan/vulkan.h>
 
 int main(int argc, const char * argv[]) {
+
+    // Definition of the Application, sType has to be filled in every VKObject
+    VkApplicationInfo appInfo;
+    appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    appInfo.pNext = 0;
+    appInfo.pApplicationName = "Spielwiese";
+    appInfo.applicationVersion = VK_MAKE_VERSION(0, 0, 0);
+    appInfo.pEngineName = "THNgine";
+    appInfo.engineVersion = VK_MAKE_VERSION(0, 0, 0);
+    appInfo.apiVersion = VK_API_VERSION_1_1;
+
+    // Creation of Vulkan instance
+    VkInstanceCreateInfo instanceInfo;
+    instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    instanceInfo.pNext = NULL;
+    instanceInfo.flags = 0;
+    instanceInfo.pApplicationInfo = &appInfo;
+    instanceInfo.enabledLayerCount = 0;
+    instanceInfo.ppEnabledLayerNames = NULL;
+    instanceInfo.enabledExtensionCount = 0;
+    instanceInfo.ppEnabledExtensionNames = NULL;
+
+    // Create instance, without it you can't access the GPU
     VkInstance instance;
-    VkResult result;
-    VkInstanceCreateInfo info = {};
+
+    // Check if everything is fine with our instance creation
+    VkResult result = vkCreateInstance(&instanceInfo, NULL, & instance);
+
+    if (result != VK_SUCCESS) {
+        std::cout << "Fuck";
+    }
+
+    // Check the amount of Physical Devices
+    uint32_t amountOfPhysicalDevices = 0;
+    vkEnumeratePhysicalDevices(instance, &amountOfPhysicalDevices, NULL);
+
+    VkPhysicalDevice *physicalDevices = new VkPhysicalDevice[amountOfPhysicalDevices];
+
+    vkEnumeratePhysicalDevices(instance, &amountOfPhysicalDevices, physicalDevices);
+
+
     uint32_t instance_layer_count;
 
     result = vkEnumerateInstanceLayerProperties(&instance_layer_count, nullptr);
@@ -18,7 +56,7 @@ int main(int argc, const char * argv[]) {
         }
     }
 
-    result = vkCreateInstance(&info, NULL, &instance);
+    result = vkCreateInstance(&instanceInfo, NULL, &instance);
     std::cout << "vkCreateInstance result: " << result  << "\n";
 
     vkDestroyInstance(instance, nullptr);
