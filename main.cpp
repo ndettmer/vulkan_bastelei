@@ -1,6 +1,9 @@
 #include <memory>
 #include <iostream>
 #include <vulkan/vulkan.h>
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+#include "Window.hpp"
 
 void printStats(VkPhysicalDevice &device) {
     VkPhysicalDeviceProperties properties;
@@ -14,8 +17,22 @@ void printStats(VkPhysicalDevice &device) {
     std::cout << "Device Type: " << properties.deviceType << "\n";
 }
 
-int main(int argc, const char * argv[]) {
+/*int main(int argc, const char * argv[]) {
 
+    Window app;
+
+    try {
+        app.run();
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+
+
+    // Vulkan
+    // ------------------------- //
     // Definition of the Application, sType has to be filled in every VKObject
     VkApplicationInfo appInfo;
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -26,7 +43,7 @@ int main(int argc, const char * argv[]) {
     appInfo.engineVersion = VK_MAKE_VERSION(0, 0, 0);
     appInfo.apiVersion = VK_API_VERSION_1_1;
 
-    // Creation of Vulkan instance
+    // Creation of Vulkan instance info
     VkInstanceCreateInfo instanceInfo;
     instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     instanceInfo.pNext = NULL;
@@ -52,7 +69,7 @@ int main(int argc, const char * argv[]) {
     result = vkEnumeratePhysicalDevices(instance, &amountOfPhysicalDevices, NULL);
 
     if (result != VK_SUCCESS) {
-        std::cout << "Can't get Number of GPUs";
+        std::cout << "Can't get Number of GPU(s)";
     }
 
     // Create some physicalDevices
@@ -63,12 +80,14 @@ int main(int argc, const char * argv[]) {
         std::cout << "Error again";
     }
 
-    std::cout << "I have " << amountOfPhysicalDevices << " GPUs\n";
+    std::cout << "I have " << amountOfPhysicalDevices << " GPU(s)\n";
 
     for (int i = 0; i < amountOfPhysicalDevices; i++) {
         printStats(physicalDevices[i]);
     }
 
     vkDestroyInstance(instance, nullptr);
+
+//    SDLWindow;
     return 0;
-}
+}*/
