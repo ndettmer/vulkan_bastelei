@@ -1,2 +1,2 @@
 if __name__ == '__main__':
-    print("Create a merge conflict")
+    print("Create one more merge conflict")
